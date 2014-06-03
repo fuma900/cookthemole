@@ -1,0 +1,48 @@
+{
+  "name": "CookTheMole",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "This extension allow you to improve the appeal of many reciepes websites.",
+  // "homepage_url": "http://extensionizr.com",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "default_locale": "en",
+  "background": {
+    "page": "src/bg/background.html",
+    "persistent": true
+  },
+  "page_action": {
+    "default_icon": "icons/icon19.png",
+    "default_title": "CookTheMole",
+    "default_popup": "src/page_action/page_action.html"
+  },
+  "permissions": [
+    "contextMenus",
+    "tts",
+    "tabs",
+    "http://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*"
+      ],
+      "css": [
+        "src/inject/inject.css"
+      ]
+    },
+    {
+      "matches": [
+        "http://allrecipes.com/Recipe/*",
+        "http://allrecipes.com/recipe/*"
+      ],
+      "js": [
+        "js/jquery/jquery.min.js",
+        "src/inject/inject.js"
+      ]
+    }
+  ]
+}

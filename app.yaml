@@ -1,0 +1,22 @@
+application: cookthemole
+version: 1
+runtime: python27
+threadsafe: true
+api_version: 1
+
+handlers:
+# Endpoints handler
+- url: /_ah/spi/.*
+  script: cookthemole_api.APPLICATION
+- url: /
+  upload: index.html
+  static_files: index.html
+
+libraries:
+- name: pycrypto
+  version: latest
+- name: endpoints
+  version: 1.0
+
+builtins:
+- appstats: on

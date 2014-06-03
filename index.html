@@ -1,0 +1,102 @@
+<html>
+	<head>
+	</head>
+	<body>
+		<p>Insert allreciepes.com URL</p>
+		<p>Hint: say "home" to reset the page, "go" to launch the script and "stop" to stop the registration!</p>
+		<form action="#" onSubmit="parse();return false" name="form">
+			<input type="text" id="input" style="width:800px"><input type="submit" value="Go!">
+		</form>
+		<!--
+		<p>
+			<button onClick="recognition.start()">Start voice recognition</button>
+			<button onClick="recognition.stop()">Stop voice recognition</button>
+		</p>
+		-->
+		<p>Directions:</p>
+		<ul id="result">
+		</ul>
+
+		<script type="text/javascript">
+			/* Initialize GoogleApi Client library */
+			function init(){
+				// var ROOT = 'https://cookthemole.appspot.com/_ah/api';
+				var ROOT = 'http://localhost:9080/_ah/api';
+				gapi.client.load('cookthemole', 'v1', function() {}, ROOT);
+				gapi.client.load('oauth2', 'v2', signIn);
+			}
+			/* Retrieve data from backend using client library */
+			function parse() {
+				apiCall();
+			}
+
+			function signIn() {
+				var CLIENT_ID = '743605158714-vfjtaobdqlgshs7157r43e1ohntdkbe6.apps.googleusercontent.com';
+				var SCOPES = 'https://www.googleapis.com/auth/userinfo.email';
+				gapi.auth.authorize({client_id: CLIENT_ID, scope: SCOPES, immediate: false}, function(response) {console.log(response);});
+			}
+
+			function apiCall() {
+				var input=document.getElementById('input');
+				var result=document.getElementById('result');
+				result.innerHTML =  "Loading... If it takes more than 10s check URL and try again!";
+
+				gapi.client.cookthemole.directions.getDirectionsCollection({sentence:input.value}).execute(function(resp) {
+					console.log(resp);
+					var i=0;
+					input.value = "";
+					result.innerHTML = "";
+					while(i<resp.length){
+						result.innerHTML = result.innerHTML + "<li>" + resp.steps[i].time +  " min:     " + resp.steps[i].sentence + "</li>";
+						i++;
+					}
+				});
+			}
+
+		</script>
+		<script src="https://apis.google.com/js/client.js?onload=init"></script>
+
+		<!--
+		<script type="text/javascript">
+			function trim11 (str) {
+				str = str.replace(/^\s+/, '');
+				for (var i = str.length - 1; i >= 0; i--) {
+					if (/\S/.test(str.charAt(i))) {
+						str = str.substring(0, i + 1);
+						break;
+					}
+				}
+				return str;
+			}
+
+			transcript = "";
+			var recognition = new webkitSpeechRecognition();
+			recognition.lang = "en";
+			recognition.continuous = true;
+			recognition.interim = true;
+			recognition.interimResults = true;
+			recognition.onresult = function(event) {
+				if (event.results.length > 0) {
+					transcript = event.results[event.results.length-1][0].transcript;
+					if (trim11(transcript)=="home") {
+						console.log("reset!!");
+						var result=document.getElementById('result');
+						result.innerHTML = "";
+					}
+					if (trim11(transcript)=="go") {
+						console.log("go!!");
+						parse();
+					} 
+					if (trim11(transcript)=="stop") {
+						console.log("voice recognition stopped");
+						recognition.stop();
+					} 
+					console.log(event.results);
+				// q.form.submit();
+				}
+			}
+			recognition.start();
+		</script>
+		-->
+	</body>
+</html>
